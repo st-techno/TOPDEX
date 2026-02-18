@@ -52,6 +52,4 @@ func (ob *OrderBook) PreMatchRisk(userID string, posSize float64) bool {
     return calculateIMR(pos, posSize) <= getAvailableMargin(userID)
 }
 
-## This uses priority heaps for price-time priority and Redis for fast L2 snapshots.
-
-
+// This uses priority heaps for price-time priority and Redis for fast L2 snapshots.
