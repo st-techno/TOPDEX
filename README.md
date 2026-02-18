@@ -23,50 +23,6 @@ Funding & Pricing: Hourly funding payments (longs pay shorts if premium >0); ora
 
 On/Off-Chain Hybrid: Off-chain execution for speed; batch settlements to L1 via Merkle proofs for self-custody/verifiability.
 
-# Deployment & Ops
-
-Dockerfile (Go service):
-
-FROM golang:1.22-alpine AS builder
-
-COPY . /app
-
-RUN go build -o matcher ./cmd/matcher
-
-FROM alpine:latest
-
-COPY --from=builder /app/matcher /matcher
-
-CMD ["/matcher"]
-
-docker-compose.yml (dev stack):
-
-services:
-
-  postgres:
-  
-    image: postgres:16
-    
-    environment:
-    
-      POSTGRES_DB: topdex
-  
-  redis:
-  
-    image: redis:7-alpine
-  
-  kafka:
-  
-    image: confluentinc/cp-kafka:7.5.0
-  
-  matcher:
-  
-    build: .
-   
-    depends_on: [redis, kafka]
-
-CI/CD (GitHub Actions): Lints (golangci-lint), tests (95% coverage), builds Docker images, deploys to EKS. Helm charts for prod scaling (HPA on CPU<70%).
-
 Scaling & Patterns
 
 Cache: Redis Cluster for order books (TTL 1s snapshots); LRU for positions.
